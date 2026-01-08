@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Medalhas V6 Pro - Sistema Avançado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .login-container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            align-items: center;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .toggle-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .toggle-form button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0;
+            margin: 0;
+            text-decoration: underline;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-name {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-id {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+
+        .card-info {
+            font-size: 11px;
+            color: #999;
+            margin: 3px 0;
+        }
+
+        .production-progress {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 8px;
+            justify-content: space-around;
+            font-size: 14px;
+        }
+
+        .evolution-badge {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .evolution-badge:hover {
+            transform: scale(1.15);
+        }
+
+        .evolution-badge-emoji {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .evolution-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            margin-bottom: 5px;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+
+        .evolution-badge:hover .evolution-tooltip {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 3% auto;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .image-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .image-item.empty {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .image-label {
+            font-weight: 600;
+            font-size: 11px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .image-icon {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+
+        .log-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 13px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .video-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .video-status.producao {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .video-status.completo {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .info-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 50px auto;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TELA DE CHAVE DE ACESSO -->
+    <div id="chavScreen" class="login-container">
+        <h1>🏆 Metal Medalhas</h1>
+        <p>Sistema de Gestão de Produção V6 Pro</p>
+        <p style="font-size: 12px; color: #999; margin: 0;">Chave de acesso: <strong>2502</strong></p>
+        
+        <div id="chavError" class="error hidden"></div>
+
+        <form id="chavForm" onsubmit="validarChave(event)">
+            <div class="form-group">
+                <label for="chavAcesso">🔐 Chave de Acesso</label>
+                <input type="password" id="chavAcesso" placeholder="Digite a chave" required>
+            </div>
+            <button type="submit" class="btn-primary">🔓 Acessar</button>
+        </form>
+    </div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen" class="login-container hidden">
+        <h1>🏆 Metal Medalhas</h1>
+        <p>Sistema de Gestão de Produção</p>
+        
+        <div id="loginError" class="error hidden"></div>
+
+        <form id="loginForm" onsubmit="fazerLogin(event)">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Senha</label>
+                <input type="password" id="loginPassword" placeholder="Digite sua senha" required>
+            </div>
+            <button type="submit" class="btn-primary">🔓 Entrar</button>
+        </form>
+
+        <div class="toggle-form">
+            Não tem conta? 
+            <button onclick="mostrarFormularioCadastro()">Cadastre-se aqui</button>
+        </div>
+    </div>
+
+    <!-- TELA DE CADASTRO -->
+    <div id="cadastroScreen" class="login-container hidden">
+        <h1>🏆 Metal Medalhas</h1>
+        <p>Criar Nova Conta</p>
+        
+        <div id="cadastroError" class="error hidden"></div>
+
+        <form id="cadastroForm" onsubmit="fazerCadastro(event)">
+            <div class="form-group">
+                <label for="cadastroNome">Nome Completo</label>
+                <input type="text" id="cadastroNome" placeholder="Seu nome" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastroEmail">Email</label>
+                <input type="email" id="cadastroEmail" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastroPassword">Senha</label>
+                <input type="password" id="cadastroPassword" placeholder="Crie uma senha forte" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastroConfirm">Confirmar Senha</label>
+                <input type="password" id="cadastroConfirm" placeholder="Confirme a senha" required>
+            </div>
+            <button type="submit" class="btn-primary">✓ Criar Conta</button>
+        </form>
+
+        <div class="toggle-form">
+            Já tem conta? 
+            <button onclick="mostrarFormularioLogin()">Faça login</button>
+        </div>
+    </div>
+
+    <!-- TELA PRINCIPAL -->
+    <div id="mainScreen" class="hidden">
+        <div class="container">
+            <header>
+                <h1>🏆 Metal Medalhas V6 Pro</h1>
+                <div class="user-info">
+                    <span class="user-name" id="userDisplayName"></span>
+                    <button class="btn-logout" onclick="fazerLogout()">🚪 Sair</button>
+                </div>
+            </header>
+
+            <div id="abaModelos">
+                <div class="controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Buscar por ID, nome, tamanho...">
+                        <button class="btn-primary" onclick="buscar()">🔍 Buscar</button>
+                        <button class="btn-secondary" onclick="limpar()">✕ Limpar</button>
+                        <button class="btn-success" onclick="abrirFormularioNovo()">➕ Novo Modelo</button>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalModelos">0</div>
+                            <div class="stat-label">Total de Modelos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="encontrados">0</div>
+                            <div class="stat-label">Encontrados</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results" id="resultados"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALHES EXPANDIDO -->
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitulo"></div>
+                    <div id="modalSubtitulo" style="font-size: 12px; color: #999; margin-top: 5px;"></div>
+                </div>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+
+            <!-- ABAS DE DETALHES -->
+            <div class="tabs-container" id="modalTabs"></div>
+            <div id="modalTabsContent"></div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="abrirEdicao()">✏️ Editar</button>
+                <button class="btn-secondary" onclick="fecharModal()" style="flex: 1;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE FORMULÁRIO -->
+    <div id="modalFormulario" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">➕ Novo Modelo de Medalha</div>
+                <button class="close-btn" onclick="fecharFormulario()">&times;</button>
+            </div>
+
+            <form id="formModelo" onsubmit="salvarModelo(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="id">ID do Modelo *</label>
+                        <input type="text" id="id" placeholder="MM-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nome">Nome/Descrição *</label>
+                        <input type="text" id="nome" placeholder="Troféu Árvore Prata" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="tipo">Tipo *</label>
+                        <select id="tipo" required>
+                            <option value="Medalha">Medalha</option>
+                            <option value="Moeda">Moeda</option>
+                            <option value="Troféu">Troféu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tamanho">Tamanho (mm) *</label>
+                        <input type="text" id="tamanho" placeholder="70" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="peso">Peso (gramas)</label>
+                        <input type="number" id="peso" placeholder="45" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="banho">Banho/Acabamento *</label>
+                        <input type="text" id="banho" placeholder="Prata Envelhecida, Ouro Brilho..." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Características Especiais:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="temCor">
+                            <label for="temCor" style="margin: 0; font-weight: normal;">Aplicação de Cor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="temVerso">
+                            <label for="temVerso" style="margin: 0; font-weight: normal;">Arte no Verso</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="linkImg">Link da Imagem Principal</label>
+                    <input type="text" id="linkImg" placeholder="https://drive.google.com/...">
+                </div>
+
+                <div class="form-group">
+                    <label for="linkFitas">Link Imagem das Fitas</label>
+                    <input type="text" id="linkFitas" placeholder="https://drive.google.com/...">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-success" style="flex: 1;">✓ Salvar Modelo</button>
+                    <button type="button" class="btn-secondary" onclick="fecharFormulario()" style="flex: 1;">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let usuarioAtual = null;
+        let usuarios = [];
+        let modelos = [];
+        let modeloAtual = null;
+
+        const ESTAGIOS = [
+            { id: 'matriz', nome: 'Matriz', abbr: 'M', icon: '🔨' },
+            { id: 'fundido', nome: 'Fundido', abbr: 'F', icon: '🔥' },
+            { id: 'banhado', nome: 'Banhado', abbr: 'B', icon: '✨' },
+            { id: 'finalizado', nome: 'Finalizado', abbr: 'Z', icon: '✅' }
+        ];
+
+        function inicializar() {
+            usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            modelos = JSON.parse(localStorage.getItem('modelos')) || [
+                { 
+                    id: "MM-001", 
+                    nome: "Troféu Árvore Prata", 
+                    tipo: "Medalha", 
+                    tamanho: "70", 
+                    peso: "45",
+                    banho: "Prata Envelhecida",
+                    temCor: false,
+                    temVerso: false,
+                    linkImg: "#", 
+                    linkFitas: "#",
+                    linkVideo: "#",
+                    arteCliente: "#",
+                    producao: {} 
+                }
+            ];
+
+            const acessoValidado = sessionStorage.getItem('acessoValidado');
+            if (acessoValidado) {
+                const usuarioLogado = localStorage.getItem('usuarioLogado');
+                if (usuarioLogado) {
+                    usuarioAtual = JSON.parse(usuarioLogado);
+                    mostrarTelaP rincipal();
+                } else {
+                    mostrarFormularioLogin();
+                }
+            }
+        }
+
+        function validarChave(event) {
+            event.preventDefault();
+            const chave = document.getElementById('chavAcesso').value.trim();
+
+            if (chave === '2502') {
+                sessionStorage.setItem('acessoValidado', 'true');
+                document.getElementById('chavScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('chavAcesso').value = '';
+                document.getElementById('chavError').classList.add('hidden');
+            } else {
+                document.getElementById('chavError').textContent = '❌ Chave incorreta!';
+                document.getElementById('chavError').classList.remove('hidden');
+                document.getElementById('chavAcesso').value = '';
+            }
+        }
+
+        function fazerLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginPassword').value;
+
+            const usuario = usuarios.find(u => u.email === email);
+            if (!usuario || usuario.senha !== senha) {
+                document.getElementById('loginError').textContent = '❌ Email ou senha incorretos';
+                document.getElementById('loginError').classList.remove('hidden');
+                return;
+            }
+
+            usuarioAtual = usuario;
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+            mostrarTelaP rincipal();
+        }
+
+        function fazerCadastro(event) {
+            event.preventDefault();
+            const nome = document.getElementById('cadastroNome').value;
+            const email = document.getElementById('cadastroEmail').value;
+            const senha = document.getElementById('cadastroPassword').value;
+            const confirmar = document.getElementById('cadastroConfirm').value;
+
+            if (senha !== confirmar) {
+                document.getElementById('cadastroError').textContent = '❌ As senhas não conferem';
+                document.getElementById('cadastroError').classList.remove('hidden');
+                return;
+            }
+
+            if (usuarios.find(u => u.email === email)) {
+                document.getElementById('cadastroError').textContent = '❌ Email já cadastrado';
+                document.getElementById('cadastroError').classList.remove('hidden');
+                return;
+            }
+
+            usuarios.push({
+                id: Date.now(),
+                nome, email, senha,
+                admin: false,
+                criacao: new Date().toLocaleString('pt-BR'),
+                ultimaAtividade: new Date().toLocaleString('pt-BR')
+            });
+
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            document.getElementById('cadastroSuccess').textContent = '✓ Conta criada! Faça login agora.';
+            document.getElementById('cadastroSuccess').classList.remove('hidden');
+            setTimeout(() => mostrarFormularioLogin(), 2000);
+        }
+
+        function fazerLogout() {
+            localStorage.removeItem('usuarioLogado');
+            usuarioAtual = null;
+            sessionStorage.removeItem('acessoValidado');
+            document.getElementById('chavScreen').classList.remove('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('cadastroScreen').classList.add('hidden');
+        }
+
+        function mostrarFormularioLogin() {
+            document.getElementById('chavScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('cadastroScreen').classList.add('hidden');
+        }
+
+        function mostrarFormularioCadastro() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('cadastroScreen').classList.remove('hidden');
+        }
+
+        function mostrarTelaP rincipal() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('cadastroScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+            document.getElementById('userDisplayName').textContent = `👤 ${usuarioAtual.nome}`;
+            atualizarTela();
+        }
+
+        function atualizarTela() {
+            exibirResultados(modelos);
+            document.getElementById('encontrados').textContent = modelos.length;
+            document.getElementById('totalModelos').textContent = modelos.length;
+        }
+
+        function buscar() {
+            const termo = document.getElementById('searchInput').value.toLowerCase();
+            const resultados = modelos.filter(m => 
+                m.id.toLowerCase().includes(termo) || 
+                m.nome.toLowerCase().includes(termo)
+            );
+            exibirResultados(resultados);
+            document.getElementById('encontrados').textContent = resultados.length;
+        }
+
+        function limpar() {
+            document.getElementById('searchInput').value = '';
+            atualizarTela();
+        }
+
+        function exibirResultados(resultados) {
+            const container = document.getElementById('resultados');
+            if (resultados.length === 0) {
+                container.innerHTML = '<div class="no-results">❌ Nenhum modelo encontrado.</div>';
+                return;
+            }
+
+            container.innerHTML = resultados.map(modelo => {
+                const imgUrl = modelo.linkImg && modelo.linkImg !== '#' 
+                    ? modelo.linkImg 
+                    : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2248%22%3E🏆%3C/text%3E%3C/svg%3E';
+
+                const videoStatus = modelo.linkVideo && modelo.linkVideo !== '#' ? '🟢' : '🔴';
+
+                return `
+                    <div class="card" onclick="abrirDetalhes('${modelo.id}')">
+                        <div class="card-image">
+                            <img src="${imgUrl}" alt="${modelo.nome}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2248%22%3E🏆%3C/text%3E%3C/svg%3E'" />
+                        </div>
+                        <div class="card-content">
+                            <div class="card-id">${modelo.id}</div>
+                            <div class="card-title">${modelo.nome}</div>
+                            <div class="card-info"><strong>Tipo:</strong> ${modelo.tipo}</div>
+                            <div class="card-info"><strong>Tamanho:</strong> ${modelo.tamanho}mm | <strong>Peso:</strong> ${modelo.peso || 'N/A'}g</div>
+                            <div class="card-info"><strong>Banho:</strong> ${modelo.banho}</div>
+                            <div class="card-info" style="margin-top: 8px;">
+                                ${modelo.temCor ? '🎨 Com Cor' : ''} 
+                                ${modelo.temVerso ? '📐 Arte Verso' : ''}
+                                Vídeo ${videoStatus}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function abrirDetalhes(id) {
+            modeloAtual = modelos.find(m => m.id === id);
+            if (!modeloAtual) return;
+
+            document.getElementById('modalTitulo').textContent = modeloAtual.nome;
+            document.getElementById('modalSubtitulo').textContent = `ID: ${modeloAtual.id} | Tamanho: ${modeloAtual.tamanho}mm | Peso: ${modeloAtual.peso || 'N/A'}g`;
+
+            let tabs = `
+                <button class="tab-btn active" onclick="mudarTab(event, 'imagens')">📸 Imagens</button>
+                <button class="tab-btn" onclick="mudarTab(event, 'video')">🎥 Vídeo ${modeloAtual.linkVideo && modeloAtual.linkVideo !== '#' ? '🟢' : '🔴'}</button>
+                ${modeloAtual.temCor ? '<button class="tab-btn" onclick="mudarTab(event, \'producao\')">⚙️ Produção</button>' : ''}
+                <button class="tab-btn" onclick="mudarTab(event, 'arte')">🎨 Arte do Cliente</button>
+                <button class="tab-btn" onclick="mudarTab(event, 'info')">ℹ️ Informações</button>
+            `;
+            document.getElementById('modalTabs').innerHTML = tabs;
+
+            let conteudo = `
+                <div class="tab-content active" id="tab-imagens">
+                    <h3>Imagens do Modelo</h3>
+                    <div class="image-grid">
+                        <div class="image-item ${modeloAtual.linkImg && modeloAtual.linkImg !== '#' ? '' : 'empty'}" onclick="adicionarMidia('linkImg')">
+                            <div class="image-label">📷 Frente</div>
+                            <div class="image-icon">${modeloAtual.linkImg && modeloAtual.linkImg !== '#' ? '✅' : '➕'}</div>
+                        </div>
+                        <div class="image-item ${modeloAtual.linkFitas && modeloAtual.linkFitas !== '#' ? '' : 'empty'}" onclick="adicionarMidia('linkFitas')">
+                            <div class="image-label">🎀 Fitas</div>
+                            <div class="image-icon">${modeloAtual.linkFitas && modeloAtual.linkFitas !== '#' ? '✅' : '➕'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-video">
+                    <h3>Vídeo de Produção</h3>
+                    <div class="video-status ${modeloAtual.linkVideo && modeloAtual.linkVideo !== '#' ? 'completo' : 'producao'}">
+                        ${modeloAtual.linkVideo && modeloAtual.linkVideo !== '#' ? '✅ Vídeo Disponível' : '🔴 Vídeo em Produção'}
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item ${modeloAtual.linkVideo && modeloAtual.linkVideo !== '#' ? '' : 'empty'}" onclick="adicionarMidia('linkVideo')">
+                            <div class="image-label">🎬 Vídeo</div>
+                            <div class="image-icon">${modeloAtual.linkVideo && modeloAtual.linkVideo !== '#' ? '✅' : '📹'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                ${modeloAtual.temCor ? `
+                <div class="tab-content" id="tab-producao">
+                    <h3>Estágios de Produção</h3>
+                    <div class="image-grid">
+                        ${ESTAGIOS.map(est => {
+                            const temDados = modeloAtual.producao && modeloAtual.producao[est.id];
+                            return `
+                                <div class="image-item" onclick="adicionarEstagio('${est.id}')">
+                                    <div class="image-label">${est.icon} ${est.nome}</div>
+                                    <div class="image-icon">${temDados ? '✅' : '➕'}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="tab-content" id="tab-arte">
+                    <h3>Arte do Cliente (Logomarca)</h3>
+                    <div class="image-grid">
+                        <div class="image-item ${modeloAtual.arteCliente && modeloAtual.arteCliente !== '#' ? '' : 'empty'}" onclick="adicionarMidia('arteCliente')">
+                            <div class="image-label">🏢 Logo/Arte</div>
+                            <div class="image-icon">${modeloAtual.arteCliente && modeloAtual.arteCliente !== '#' ? '✅' : '➕'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-info">
+                    <h3>Informações Técnicas</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">ID</div>
+                            <div class="info-value">${modeloAtual.id}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo</div>
+                            <div class="info-value">${modeloAtual.tipo}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tamanho</div>
+                            <div class="info-value">${modeloAtual.tamanho}mm</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Peso</div>
+                            <div class="info-value">${modeloAtual.peso || 'N/A'}g</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Banho/Acabamento</div>
+                            <div class="info-value">${modeloAtual.banho}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Aplicação de Cor</div>
+                            <div class="info-value">${modeloAtual.temCor ? '✅ Sim' : '❌ Não'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Arte no Verso</div>
+                            <div class="info-value">${modeloAtual.temVerso ? '✅ Sim' : '❌ Não'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalTabsContent').innerHTML = conteudo;
+            document.getElementById('modalDetalhes').style.display = 'block';
+        }
+
+        function mudarTab(event, tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        function adicionarMidia(campo) {
+            const link = prompt(`Cole o link do ${campo}:`);
+            if (link) {
+                modeloAtual[campo] = link;
+                localStorage.setItem('modelos', JSON.stringify(modelos));
+                abrirDetalhes(modeloAtual.id);
+            }
+        }
+
+        function adicionarEstagio(estId) {
+            const link = prompt(`Cole o link para ${estId}:`);
+            if (link) {
+                if (!modeloAtual.producao) modeloAtual.producao = {};
+                modeloAtual.producao[estId] = link;
+                localStorage.setItem('modelos', JSON.stringify(modelos));
+                abrirDetalhes(modeloAtual.id);
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('modalDetalhes').style.display = 'none';
+        }
+
+        function abrirFormularioNovo() {
+            document.getElementById('formModelo').reset();
+            document.getElementById('modalFormulario').style.display = 'block';
+            modeloAtual = null;
+        }
+
+        function fecharFormulario() {
+            document.getElementById('modalFormulario').style.display = 'none';
+        }
+
+        function salvarModelo(event) {
+            event.preventDefault();
+
+            const novoModelo = {
+                id: document.getElementById('id').value.toUpperCase(),
+                nome: document.getElementById('nome').value,
+                tipo: document.getElementById('tipo').value,
+                tamanho: document.getElementById('tamanho').value,
+                peso: document.getElementById('peso').value || '0',
+                banho: document.getElementById('banho').value,
+                temCor: document.getElementById('temCor').checked,
+                temVerso: document.getElementById('temVerso').checked,
+                linkImg: document.getElementById('linkImg').value || '#',
+                linkFitas: document.getElementById('linkFitas').value || '#',
+                linkVideo: modeloAtual?.linkVideo || '#',
+                arteCliente: modeloAtual?.arteCliente || '#',
+                producao: modeloAtual?.producao || {}
+            };
+
+            if (modeloAtual) {
+                Object.assign(modeloAtual, novoModelo);
+            } else {
+                modelos.push(novoModelo);
+            }
+
+            localStorage.setItem('modelos', JSON.stringify(modelos));
+            fecharFormulario();
+            atualizarTela();
+            modeloAtual = null;
+        }
+
+        function abrirEdicao() {
+            if (!modeloAtual) return;
+            
+            document.getElementById('id').value = modeloAtual.id;
+            document.getElementById('nome').value = modeloAtual.nome;
+            document.getElementById('tipo').value = modeloAtual.tipo;
+            document.getElementById('tamanho').value = modeloAtual.tamanho;
+            document.getElementById('peso').value = modeloAtual.peso || '';
+            document.getElementById('banho').value = modeloAtual.banho;
+            document.getElementById('temCor').checked = modeloAtual.temCor;
+            document.getElementById('temVerso').checked = modeloAtual.temVerso;
+            document.getElementById('linkImg').value = modeloAtual.linkImg !== '#' ? modeloAtual.linkImg : '';
+            document.getElementById('linkFitas').value = modeloAtual.linkFitas !== '#' ? modeloAtual.linkFitas : '';
+
+            fecharModal();
+            document.getElementById('modalFormulario').style.display = 'block';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.id === 'modalDetalhes') fecharModal();
+            if (event.target.id === 'modalFormulario') fecharFormulario();
+        }
+
+        inicializar();
+    </script>
+</body>
+</html>
