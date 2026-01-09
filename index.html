@@ -866,7 +866,7 @@
                 const usuarioLogado = localStorage.getItem('usuarioLogado');
                 if (usuarioLogado) {
                     usuarioAtual = JSON.parse(usuarioLogado);
-                    mostrarTelaP rincipal();
+                    mostrarTelaPrincipal();
                 } else {
                     mostrarFormularioLogin();
                 }
@@ -904,7 +904,7 @@
 
             usuarioAtual = usuario;
             localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-            mostrarTelaP rincipal();
+            mostrarTelaPrincipal();
         }
 
         function fazerCadastro(event) {
@@ -961,7 +961,7 @@
             document.getElementById('cadastroScreen').classList.remove('hidden');
         }
 
-        function mostrarTelaP rincipal() {
+        function mostrarTelaPrincipal() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('cadastroScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
