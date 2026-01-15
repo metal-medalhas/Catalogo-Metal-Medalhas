@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metal Medalhas V20 - Sistema Avançado com Status</title>
+    <title>Metal Medalhas V21 - Sistema com Faseamento</title>
     <style>
         * {
             margin: 0;
@@ -235,14 +235,14 @@
             margin-top: 5px;
         }
 
-        .card-tags {
+        .card-estagios {
             display: flex;
-            flex-wrap: wrap;
             gap: 4px;
             margin-top: 8px;
+            flex-wrap: wrap;
         }
 
-        .tag {
+        .estágio-badge {
             background: #e8f0ff;
             color: #667eea;
             padding: 3px 8px;
@@ -276,7 +276,7 @@
             margin: 2% auto;
             padding: 30px;
             border-radius: 12px;
-            max-width: 900px;
+            max-width: 1000px;
             max-height: 95vh;
             overflow-y: auto;
         }
@@ -306,12 +306,33 @@
 
         .modal-body {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 350px 1fr;
             gap: 30px;
         }
 
         .modal-image {
             text-align: center;
+        }
+
+        .estágio-selector {
+            margin-bottom: 15px;
+        }
+
+        .estágio-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .estágio-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
         }
 
         .modal-image img {
@@ -326,6 +347,60 @@
         .modal-image button {
             width: 100%;
             margin-bottom: 10px;
+        }
+
+        .timeline {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            background: #e8f0ff;
+        }
+
+        .timeline-item.ativo {
+            background: #667eea;
+            color: white;
+        }
+
+        .timeline-item.ativo .timeline-emoji {
+            font-size: 16px;
+        }
+
+        .timeline-emoji {
+            font-size: 16px;
+            min-width: 25px;
+        }
+
+        .timeline-info {
+            text-align: left;
+            flex: 1;
+        }
+
+        .timeline-nome {
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .timeline-data {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .timeline-item.ativo .timeline-data {
+            color: rgba(255,255,255,0.8);
         }
 
         .modal-details h3 {
@@ -494,7 +569,7 @@
     <div id="mainScreen">
         <div class="container">
             <header>
-                <h1>🏆 Metal Medalhas V20 - Com Status</h1>
+                <h1>🏆 Metal Medalhas V21 - Faseamento</h1>
                 <button class="btn-logout" onclick="location.reload()">🔄 Recarregar</button>
             </header>
 
@@ -519,7 +594,11 @@
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-number" id="totalModelos">0</div>
-                        <div class="stat-label">Total de Modelos</div>
+                        <div class="stat-label">Total de Modelos Únicos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalRegistros">0</div>
+                        <div class="stat-label">Total de Registros</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="encontrados">0</div>
@@ -532,7 +611,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE DETALHES -->
+    <!-- MODAL DE DETALHES COM FASEAMENTO -->
     <div id="modalDetalhes" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -545,12 +624,14 @@
 
             <div class="modal-body">
                 <div class="modal-image">
+                    <div class="estágio-selector">
+                        <label>Selecione o Estágio:</label>
+                        <select id="estágioSelector" onchange="mudarEstágio()">
+                        </select>
+                    </div>
+
                     <img id="modalImg" src="" alt="Imagem" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2260%22%3E🏆%3C/text%3E%3C/svg%3E'">
-                    <button class="btn-secondary" onclick="abrirSeletorImagem()">📷 Alterar Imagem</button>
-                    
-                    <h3 style="margin-top: 15px; text-align: left;">Matriz</h3>
-                    <img id="modalImgMatriz" src="" alt="Matriz" style="width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa;" onerror="this.style.display='none'">
-                    <button class="btn-secondary" onclick="abrirSeletorMatriz()" style="margin-bottom: 10px;">📸 Matriz</button>
+                    <button class="btn-secondary" onclick="abrirSeletorImagem()" style="margin-top: 10px;">📷 Alterar Imagem</button>
                 </div>
 
                 <div class="modal-details">
@@ -583,11 +664,14 @@
                         <div class="detail-value" id="detailCaracteristica"></div>
                     </div>
 
-                    <h3>⚙️ Processo</h3>
+                    <h3>⚙️ Processo Atual</h3>
                     <div class="detail-item">
                         <div class="detail-value" id="detailProcesso"></div>
                         <div class="process-status" id="detailProcessoStatus"></div>
                     </div>
+
+                    <h3>📸 Histórico de Estágios</h3>
+                    <div class="timeline" id="timelineEstagios"></div>
 
                     <div class="modal-actions">
                         <button class="btn-primary" onclick="abrirEdicao()">✏️ Editar</button>
@@ -654,28 +738,36 @@
                     <textarea id="caracteristica" placeholder="Ex: Árvore com águia, Rosto da cidade..."></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="processo">Processo *</label>
-                    <select id="processo" required onchange="atualizarStatusProcesso()">
-                        <option value="">Selecione</option>
-                        <option value="Matriz">Matriz</option>
-                        <option value="Fundição">Fundição</option>
-                        <option value="Impressão 3D">Impressão 3D</option>
-                        <option value="Gravação">Gravação</option>
-                        <option value="Resina">Resina</option>
-                        <option value="Combinado">Combinado</option>
-                    </select>
-                </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label for="foto">Link da Imagem</label>
-                        <input type="text" id="foto" placeholder="https://drive.google.com/open?id=...">
+                        <label for="estágio">Estágio *</label>
+                        <select id="estágio" required>
+                            <option value="">Selecione</option>
+                            <option value="Matriz">🟢 Matriz</option>
+                            <option value="Fundição">🟡 Fundição</option>
+                            <option value="Impressão 3D">🟠 Impressão 3D</option>
+                            <option value="Gravação">🔵 Gravação</option>
+                            <option value="Resina">🟣 Resina</option>
+                            <option value="Acabado">⚫ Acabado</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="fotoMatriz">Link da Imagem Matriz</label>
-                        <input type="text" id="fotoMatriz" placeholder="https://drive.google.com/open?id=...">
+                        <label for="processo">Processo *</label>
+                        <select id="processo" required onchange="atualizarStatusProcesso()">
+                            <option value="">Selecione</option>
+                            <option value="Matriz">Matriz</option>
+                            <option value="Fundição">Fundição</option>
+                            <option value="Impressão 3D">Impressão 3D</option>
+                            <option value="Gravação">Gravação</option>
+                            <option value="Resina">Resina</option>
+                            <option value="Combinado">Combinado</option>
+                        </select>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="foto">Link da Imagem do Estágio</label>
+                    <input type="text" id="foto" placeholder="https://drive.google.com/open?id=...">
                 </div>
 
                 <div style="display: flex; gap: 10px;">
@@ -707,40 +799,19 @@
         </div>
     </div>
 
-    <!-- MODAL SELETOR DE MATRIZ -->
-    <div id="modalMatriz" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <div class="modal-title">📸 Imagem da Matriz</div>
-                <button class="close-btn" onclick="fecharSeletorMatriz()">&times;</button>
-            </div>
-
-            <form onsubmit="salvarNovaMatriz(event)">
-                <div class="form-group">
-                    <label>Cole o link do Google Drive:</label>
-                    <input type="text" id="novaMatriz" placeholder="https://drive.google.com/open?id=..." required>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn-success" style="flex: 1;">✓ Atualizar</button>
-                    <button type="button" class="btn-secondary" onclick="fecharSeletorMatriz()" style="flex: 1;">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        let modelos = [];
+        let todosDados = []; // Todos os registros (incluindo faseamentos)
+        let modelos = []; // Modelos únicos
         let modeloAtual = null;
+        let estágioAtual = null;
         let tiposEvento = [
             'Corrida', 'Escolar', 'Empresarial', 'Judo', 'Jiu-Jitsu', 
             'Boxe', 'Karatê', 'Natação', 'Futebol', 'Basquete', 
             'Vôlei', 'Tênis', 'Atletismo', 'Ginástica', 'Homenagem'
         ];
 
-        // ✅ URL DO GOOGLE APPS SCRIPT
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIhivAYrQjkVwroYGdYkDpxGa9-otg2JoDypfIh_mZvIkC2h0roPIp7TFYD8oDz6_c/exec';
 
-        // ✅ MAPPING DE SINAIS DE PROCESSO
         const processStatus = {
             'Matriz': '🟢 Matriz - Iniciado',
             'Fundição': '🟡 Fundição - Em Processo',
@@ -748,6 +819,15 @@
             'Gravação': '🔵 Gravação - Próximo Passo',
             'Resina': '🟣 Resina - Refinamento',
             'Combinado': '⚫ Combinado - Múltiplos'
+        };
+
+        const estágioEmoji = {
+            'Matriz': '🟢',
+            'Fundição': '🟡',
+            'Impressão 3D': '🟠',
+            'Gravação': '🔵',
+            'Resina': '🟣',
+            'Acabado': '⚫'
         };
 
         function getProcessoEmoji(processo) {
@@ -772,15 +852,18 @@
         }
 
         function carregarDoGoogleSheets() {
-            console.log('📥 Carregando dados...');
+            console.log('📥 Carregando dados com faseamento...');
             
             fetch(GOOGLE_APPS_SCRIPT_URL)
                 .then(response => response.json())
                 .then(data => {
                     console.log('✅ Dados recebidos:', data);
-                    modelos = data;
+                    todosDados = data;
                     
-                    modelos.forEach(m => {
+                    // Agrupar por ID para pegar modelos únicos
+                    modelos = [...new Map(data.map(item => [item.id, item])).values()];
+                    
+                    todosDados.forEach(m => {
                         if (m.tipoEvento && Array.isArray(m.tipoEvento)) {
                             m.tipoEvento.forEach(tipo => {
                                 if (!tiposEvento.includes(tipo)) {
@@ -790,6 +873,7 @@
                         }
                     });
                     
+                    localStorage.setItem('todosDados', JSON.stringify(todosDados));
                     localStorage.setItem('modelos', JSON.stringify(modelos));
                     localStorage.setItem('tiposEvento', JSON.stringify(tiposEvento));
                     
@@ -799,6 +883,7 @@
                 })
                 .catch(err => {
                     console.log('⚠️ Erro, usando locais');
+                    todosDados = JSON.parse(localStorage.getItem('todosDados')) || [];
                     modelos = JSON.parse(localStorage.getItem('modelos')) || [];
                     tiposEvento = JSON.parse(localStorage.getItem('tiposEvento')) || tiposEvento;
                     preencherTiposEvento();
@@ -890,6 +975,7 @@
 
         function atualizarStats(encontrados = modelos.length) {
             document.getElementById('totalModelos').textContent = modelos.length;
+            document.getElementById('totalRegistros').textContent = todosDados.length;
             document.getElementById('encontrados').textContent = encontrados;
         }
 
@@ -902,6 +988,10 @@
             }
 
             container.innerHTML = resultados.map(modelo => {
+                // Pegar todos os estágios dessa medalha
+                const estágiosDoModelo = todosDados.filter(d => d.id === modelo.id);
+                const estágiosUnicos = [...new Set(estágiosDoModelo.map(d => d.estágio || d.processo))];
+                
                 const imgUrl = converterLinkDrive(modelo.foto);
                 const emoji = getProcessoEmoji(modelo.processo);
                 
@@ -910,8 +1000,12 @@
                     : '<div class="card-image-placeholder">🏆</div>';
                 
                 const tagsHtml = modelo.tipoEvento && modelo.tipoEvento.length > 0
-                    ? modelo.tipoEvento.map(t => `<span class="tag">${t}</span>`).join('')
+                    ? modelo.tipoEvento.map(t => `<span class="estágio-badge">${t}</span>`).join('')
                     : '';
+
+                const estágiosHtml = estágiosUnicos.length > 0
+                    ? estágiosUnicos.map(e => `<span class="estágio-badge">${estágioEmoji[e] || '◯'} ${e}</span>`).join('')
+                    : '<span class="estágio-badge">Sem estágios</span>';
 
                 return `
                     <div class="card" onclick="abrirDetalhes('${modelo.id}')">
@@ -926,6 +1020,7 @@
                             <div class="card-title">${modelo.nome}</div>
                             <div class="card-info"><strong>Formato:</strong> ${modelo.formato}</div>
                             <div class="card-process">${emoji} ${modelo.processo}</div>
+                            <div class="card-estagios">${estágiosHtml}</div>
                             <div class="card-tags">${tagsHtml}</div>
                         </div>
                     </div>
@@ -937,35 +1032,75 @@
             modeloAtual = modelos.find(m => m.id === id);
             if (!modeloAtual) return;
 
-            document.getElementById('modalTitulo').textContent = modeloAtual.nome;
-            document.getElementById('modalSubtitulo').textContent = `ID: ${modeloAtual.id}`;
+            // Pegar todos os estágios dessa medalha
+            const estágiosDoModelo = todosDados.filter(d => d.id === id);
 
-            const imgUrl = converterLinkDrive(modeloAtual.foto);
+            document.getElementById('modalTitulo').textContent = modeloAtual.nome;
+            document.getElementById('modalSubtitulo').textContent = `ID: ${modeloAtual.id} • ${estágiosDoModelo.length} estágio(s)`;
+
+            // Preencher selector de estágios
+            const selector = document.getElementById('estágioSelector');
+            selector.innerHTML = estágiosDoModelo.map((e, idx) => `
+                <option value="${idx}">${estágioEmoji[e.estágio || e.processo] || '◯'} ${e.estágio || e.processo} - ${new Date(e.data).toLocaleDateString('pt-BR')}</option>
+            `).join('');
+
+            // Timeline
+            const timeline = document.getElementById('timelineEstagios');
+            timeline.innerHTML = estágiosDoModelo.map((e, idx) => `
+                <div class="timeline-item ${idx === 0 ? 'ativo' : ''}" onclick="mudarEstágioParaIndex(${idx})">
+                    <div class="timeline-emoji">${estágioEmoji[e.estágio || e.processo] || '◯'}</div>
+                    <div class="timeline-info">
+                        <div class="timeline-nome">${e.estágio || e.processo}</div>
+                        <div class="timeline-data">${new Date(e.data).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Carregar primeiro estágio
+            estágioAtual = estágiosDoModelo[0];
+            atualizarDetalhesEstágio();
+
+            document.getElementById('modalDetalhes').style.display = 'block';
+        }
+
+        function mudarEstágio() {
+            const index = parseInt(document.getElementById('estágioSelector').value);
+            const estágiosDoModelo = todosDados.filter(d => d.id === modeloAtual.id);
+            estágioAtual = estágiosDoModelo[index];
+            
+            // Atualizar timeline visual
+            document.querySelectorAll('.timeline-item').forEach((el, idx) => {
+                el.classList.toggle('ativo', idx === index);
+            });
+
+            atualizarDetalhesEstágio();
+        }
+
+        function mudarEstágioParaIndex(index) {
+            document.getElementById('estágioSelector').value = index;
+            mudarEstágio();
+        }
+
+        function atualizarDetalhesEstágio() {
+            if (!estágioAtual) return;
+
+            const imgUrl = converterLinkDrive(estágioAtual.foto);
             if (imgUrl) {
                 document.getElementById('modalImg').src = imgUrl;
             }
 
-            const imgMatrizUrl = converterLinkDrive(modeloAtual.fotoMatriz);
-            if (imgMatrizUrl) {
-                document.getElementById('modalImgMatriz').src = imgMatrizUrl;
-            } else {
-                document.getElementById('modalImgMatriz').style.display = 'none';
-            }
+            document.getElementById('detailId').textContent = estágioAtual.id;
+            document.getElementById('detailNome').textContent = estágioAtual.nome;
+            document.getElementById('detailData').textContent = new Date(estágioAtual.data).toLocaleDateString('pt-BR');
+            document.getElementById('detailFormato').textContent = estágioAtual.formato;
+            document.getElementById('detailProcesso').textContent = estágioAtual.processo;
+            document.getElementById('detailProcessoStatus').textContent = processStatus[estágioAtual.processo] || '';
+            document.getElementById('detailCaracteristica').textContent = estágioAtual.caracteristica || 'Não informada';
 
-            document.getElementById('detailId').textContent = modeloAtual.id;
-            document.getElementById('detailNome').textContent = modeloAtual.nome;
-            document.getElementById('detailData').textContent = new Date(modeloAtual.data).toLocaleDateString('pt-BR');
-            document.getElementById('detailFormato').textContent = modeloAtual.formato;
-            document.getElementById('detailProcesso').textContent = modeloAtual.processo;
-            document.getElementById('detailProcessoStatus').textContent = processStatus[modeloAtual.processo] || '';
-            document.getElementById('detailCaracteristica').textContent = modeloAtual.caracteristica || 'Não informada';
-
-            const tiposHtml = modeloAtual.tipoEvento && modeloAtual.tipoEvento.length > 0
-                ? modeloAtual.tipoEvento.map(t => `<span class="char-tag">${t}</span>`).join('')
+            const tiposHtml = estágioAtual.tipoEvento && estágioAtual.tipoEvento.length > 0
+                ? estágioAtual.tipoEvento.map(t => `<span class="char-tag">${t}</span>`).join('')
                 : '<span style="color: #999;">Nenhum tipo</span>';
             document.getElementById('detailTipoEvento').innerHTML = tiposHtml;
-
-            document.getElementById('modalDetalhes').style.display = 'block';
         }
 
         function fecharModalDetalhes() {
@@ -975,7 +1110,7 @@
         function abrirFormularioNovo() {
             document.getElementById('formModelo').reset();
             document.getElementById('id').disabled = false;
-            document.querySelector('#modalFormulario .modal-title').textContent = '➕ Novo Modelo';
+            document.querySelector('#modalFormulario .modal-title').textContent = '➕ Novo Modelo / Estágio';
             
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById('data').value = hoje;
@@ -991,28 +1126,27 @@
         }
 
         function atualizarStatusProcesso() {
-            const processo = document.getElementById('processo').value;
-            // Apenas para feedback visual no formulário
+            // Feedback visual
         }
 
         function abrirEdicao() {
-            if (!modeloAtual) return;
+            if (!estágioAtual) return;
 
-            document.getElementById('id').value = modeloAtual.id;
+            document.getElementById('id').value = estágioAtual.id;
             document.getElementById('id').disabled = true;
-            document.getElementById('nome').value = modeloAtual.nome;
-            document.getElementById('data').value = modeloAtual.data;
-            document.getElementById('formato').value = modeloAtual.formato;
-            document.getElementById('processo').value = modeloAtual.processo;
-            document.getElementById('caracteristica').value = modeloAtual.caracteristica || '';
-            document.getElementById('foto').value = modeloAtual.foto !== '#' ? modeloAtual.foto : '';
-            document.getElementById('fotoMatriz').value = modeloAtual.fotoMatriz !== '#' ? modeloAtual.fotoMatriz : '';
+            document.getElementById('nome').value = estágioAtual.nome;
+            document.getElementById('data').value = estágioAtual.data;
+            document.getElementById('formato').value = estágioAtual.formato;
+            document.getElementById('estágio').value = estágioAtual.estágio || '';
+            document.getElementById('processo').value = estágioAtual.processo;
+            document.getElementById('caracteristica').value = estágioAtual.caracteristica || '';
+            document.getElementById('foto').value = estágioAtual.foto !== '#' ? estágioAtual.foto : '';
 
             document.querySelectorAll('input[name="tipoEvento"]').forEach(cb => {
-                cb.checked = modeloAtual.tipoEvento && modeloAtual.tipoEvento.includes(cb.value);
+                cb.checked = estágioAtual.tipoEvento && estágioAtual.tipoEvento.includes(cb.value);
             });
 
-            document.querySelector('#modalFormulario .modal-title').textContent = '✏️ Editar Modelo';
+            document.querySelector('#modalFormulario .modal-title').textContent = '✏️ Editar Estágio';
             fecharModalDetalhes();
             document.getElementById('modalFormulario').style.display = 'block';
         }
@@ -1022,30 +1156,46 @@
 
             const tiposEventoSelecionados = Array.from(document.querySelectorAll('input[name="tipoEvento"]:checked')).map(cb => cb.value);
 
-            const novoModelo = {
+            const novoRegistro = {
                 id: document.getElementById('id').value.toUpperCase(),
                 nome: document.getElementById('nome').value,
                 data: document.getElementById('data').value,
                 formato: document.getElementById('formato').value,
                 tipoEvento: tiposEventoSelecionados,
                 caracteristica: document.getElementById('caracteristica').value,
+                estágio: document.getElementById('estágio').value,
                 processo: document.getElementById('processo').value,
-                foto: document.getElementById('foto').value || '#',
-                fotoMatriz: document.getElementById('fotoMatriz').value || '#'
+                foto: document.getElementById('foto').value || '#'
             };
 
             const isNovo = !modeloAtual;
 
             if (modeloAtual) {
-                Object.assign(modeloAtual, novoModelo);
+                // Editar estágio existente
+                const index = todosDados.findIndex(d => 
+                    d.id === estágioAtual.id && 
+                    d.estágio === estágioAtual.estágio
+                );
+                if (index >= 0) {
+                    todosDados[index] = novoRegistro;
+                }
             } else {
-                modelos.push(novoModelo);
+                // Novo registro
+                todosDados.push(novoRegistro);
+                // Atualizar modelos únicos
+                const jaExiste = modelos.find(m => m.id === novoRegistro.id);
+                if (!jaExiste) {
+                    modelos.push(novoRegistro);
+                } else {
+                    Object.assign(jaExiste, novoRegistro);
+                }
             }
 
+            localStorage.setItem('todosDados', JSON.stringify(todosDados));
             localStorage.setItem('modelos', JSON.stringify(modelos));
-            enviarParaGoogleSheets(novoModelo, isNovo);
+            enviarParaGoogleSheets(novoRegistro, isNovo);
 
-            mostrarNotificacao('✅ Modelo salvo com sucesso!');
+            mostrarNotificacao('✅ Estágio salvo com sucesso!');
             fecharModalFormulario();
             exibirResultados(modelos);
             atualizarStats();
@@ -1065,14 +1215,23 @@
             event.preventDefault();
             const novaFoto = document.getElementById('novaImagem').value;
 
-            if (modeloAtual && novaFoto) {
-                modeloAtual.foto = novaFoto;
-                localStorage.setItem('modelos', JSON.stringify(modelos));
+            if (estágioAtual && novaFoto) {
+                estágioAtual.foto = novaFoto;
+                
+                // Atualizar no array
+                const index = todosDados.findIndex(d => 
+                    d.id === estágioAtual.id && 
+                    d.estágio === estágioAtual.estágio
+                );
+                if (index >= 0) {
+                    todosDados[index].foto = novaFoto;
+                }
+                
+                localStorage.setItem('todosDados', JSON.stringify(todosDados));
                 const imgUrl = converterLinkDrive(novaFoto);
                 document.getElementById('modalImg').src = imgUrl;
                 
-                // Enviar para Google Sheets
-                enviarParaGoogleSheets(modeloAtual, false);
+                enviarParaGoogleSheets(estágioAtual, false);
                 
                 mostrarNotificacao('📷 Imagem atualizada!');
                 fecharSeletorImagem();
@@ -1080,45 +1239,17 @@
             }
         }
 
-        function abrirSeletorMatriz() {
-            document.getElementById('modalMatriz').style.display = 'block';
-        }
-
-        function fecharSeletorMatriz() {
-            document.getElementById('modalMatriz').style.display = 'none';
-            document.getElementById('novaMatriz').value = '';
-        }
-
-        function salvarNovaMatriz(event) {
-            event.preventDefault();
-            const novaMatriz = document.getElementById('novaMatriz').value;
-
-            if (modeloAtual && novaMatriz) {
-                modeloAtual.fotoMatriz = novaMatriz;
-                localStorage.setItem('modelos', JSON.stringify(modelos));
-                const imgUrl = converterLinkDrive(novaMatriz);
-                document.getElementById('modalImgMatriz').src = imgUrl;
-                document.getElementById('modalImgMatriz').style.display = 'block';
-                
-                // Enviar para Google Sheets
-                enviarParaGoogleSheets(modeloAtual, false);
-                
-                mostrarNotificacao('📸 Imagem da matriz atualizada!');
-                fecharSeletorMatriz();
-            }
-        }
-
-        function enviarParaGoogleSheets(modelo, isNovo) {
+        function enviarParaGoogleSheets(registro, isNovo) {
             const dados = {
-                id: modelo.id,
-                nome: modelo.nome,
-                foto: modelo.foto,
-                fotoMatriz: modelo.fotoMatriz,
-                formato: modelo.formato,
-                tipoEvento: modelo.tipoEvento,
-                caracteristica: modelo.caracteristica,
-                processo: modelo.processo,
-                data: modelo.data,
+                id: registro.id,
+                nome: registro.nome,
+                foto: registro.foto,
+                formato: registro.formato,
+                tipoEvento: registro.tipoEvento,
+                caracteristica: registro.caracteristica,
+                estágio: registro.estágio,
+                processo: registro.processo,
+                data: registro.data,
                 acao: isNovo ? 'NOVO' : 'ATUALIZAR',
                 timestamp: new Date().toLocaleString('pt-BR')
             };
@@ -1148,7 +1279,6 @@
             if (event.target.id === 'modalDetalhes') fecharModalDetalhes();
             if (event.target.id === 'modalFormulario') fecharModalFormulario();
             if (event.target.id === 'modalImagem') fecharSeletorImagem();
-            if (event.target.id === 'modalMatriz') fecharSeletorMatriz();
         }
 
         inicializar();
